@@ -49,23 +49,23 @@ def template_model(symvar_type='SX'):
     # vel = model.set_variable('_x',  'vel') # orientation kite
 
     # Input struct (optimization variables):
-    _u = model.set_variable(var_type='_u', var_name='u', shape=(1,1))
+    _u = model.set_variable(var_type='_u', var_name='u', shape=(2,1))
 
     # Set expression. These can be used in the cost function, as non-linear constraints
     # or just to monitor another output.
     #model.set_expression(expr_name='cost', expr=sum1(_x**2))
-    model.set_expression(expr_name='cost', expr=sum1(_x[1]**2+_x[2]**2))
+    model.set_expression(expr_name='cost', expr=sum1(_x[1]**2+_x[2]**2+(_x[3]-1)**2))
     
     #print(xtemp)
-    A = np.array([[ 1,  0,  0,  0.2*cos(_x[2])*cos(_u)],
-                  [ 0,  1,  0,  0.2*sin(_x[2])*cos(_u)],
-                  [ 0,  0,  1,  0.2*sin(_u)],
-                  [ 0,  0,  0,  1]])
+    A = np.array([[ 1,  0,  0,  0.2*cos(_x[2])*cos(_u[1])],
+                  [ 0,  1,  0,  0.2*sin(_x[2])*cos(_u[1])],
+                  [ 0,  0,  1,  0.2*sin(_u[1])],
+                  [ 0,  0,  0,  0]])
 
-    B = np.array([[0],
-                  [0],
-                  [0],
-                  [0]])
+    B = np.array([[0, 0],
+                  [0, 0],
+                  [0, 0],
+                  [1, 0]])
 
 
     x_next = A@_x+B@_u
