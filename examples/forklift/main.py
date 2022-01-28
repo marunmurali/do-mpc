@@ -55,12 +55,14 @@ np.random.seed(99)
 
 e = np.ones([model.n_x,1])
 x0 = np.random.uniform(-3*e,3*e) # Values between +3 and +3 for all states
+x0 = np.array([[0],[1],[1.5],[0.5]])
 mpc.x0 = x0
 simulator.x0 = x0
 estimator.x0 = x0
 
 # Use initial state to set the initial guess.
 mpc.set_initial_guess()
+
 
 """
 Setup graphic:
@@ -73,7 +75,7 @@ plt.ion()
 Run MPC main loop:
 """
 
-for k in range(50):
+for k in range(100):
     u0 = mpc.make_step(x0)
     y_next = simulator.make_step(u0)
     x0 = estimator.make_step(y_next)

@@ -50,16 +50,16 @@ def template_mpc(model):
     lterm = model.aux['cost'] # terminal cost
 
     mpc.set_objective(mterm=mterm, lterm=lterm)
-    mpc.set_rterm(u=1e-4)
+    mpc.set_rterm(u=1)
 
-    min_x = np.array([[0], [-100], [-3.14], [1.0]])
-    max_x = np.array([[100], [100], [3.14], [1.0]])
+    min_x = np.array([[0], [-100], [-.5], [0]])
+    max_x = np.array([[100], [100], [.5], [1.0]])
 
     mpc.bounds['lower','_x','x'] = min_x
     mpc.bounds['upper','_x','x'] =  max_x
 
-    mpc.bounds['lower','_u','u'] = -0.8
-    mpc.bounds['upper','_u','u'] =  0.8
+    mpc.bounds['lower','_u','u'] = -1.2
+    mpc.bounds['upper','_u','u'] =  1.2
 
 
     mpc.setup()
