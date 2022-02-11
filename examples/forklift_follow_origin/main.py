@@ -27,7 +27,7 @@ from casadi.tools import *
 import pdb
 import sys
 import time
-sys.path.append('/home/arun/do-mpc')
+sys.path.append('/home/arun/shared/do-mpc')
 import do_mpc
 
 from template_model import template_model
