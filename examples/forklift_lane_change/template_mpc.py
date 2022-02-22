@@ -29,17 +29,39 @@ sys.path.append('../../')
 import do_mpc
 
 
-def template_simulator(model):
+def template_mpc(model):
     """
     --------------------------------------------------------------------------
-    template_optimizer: tuning parameters
+    template_mpc: tuning parameters
     --------------------------------------------------------------------------
     """
-    simulator = do_mpc.simulator.Simulator(model)
+    mpc = do_mpc.controller.MPC(model)
+
+    setup_mpc = {
+        'n_robust': 0,
+        'n_horizon': 10,
+        't_step': 0.2,
+        'store_full_solution':True,
+    }
+
+    mpc.set_param(**setup_mpc)
+
+    mterm = model.aux['cost']
+    lterm = model.aux['cost'] # terminal cost
+
+    mpc.set_objective(mterm=mterm, lterm=lterm)
+    mpc.set_rterm(u=np.array([[10], [1]]))
+
+    min_x = np.array([[-100], [-100], [-3.15], [-5], [-1.7], [-3]])
+    max_x = np.array([[100], [100], [3.15], [9.0], [1.7], [3]])
+
+    mpc.bounds['lower','_x','x'] = min_x
+    mpc.bounds['upper','_x','x'] =  max_x
+
+    mpc.bounds['lower','_u','u'] = np.array([[-6], [-1.7]])
+    mpc.bounds['upper','_u','u'] = np.array([[10], [1.7]])
 
 
-    simulator.set_param(t_step = 0.02)
+    mpc.setup()
 
-    simulator.setup()
-
-    return simulator
+    return mpc
