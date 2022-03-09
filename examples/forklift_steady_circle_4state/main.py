@@ -27,8 +27,6 @@ from casadi.tools import *
 import pdb
 import sys
 import time
-
-from numpy import size
 sys.path.append('/home/arun/shared/do-mpc')
 import do_mpc
 
@@ -57,7 +55,7 @@ np.random.seed(99)
 
 e = np.ones([model.n_x,1])
 x0 = np.random.uniform(-3*e,3*e) # Values between +3 and +3 for all states
-x0 = np.array([[0],[-1.5],[0],[0],[0],[0]])
+x0 = np.array([[0],[-1.5],[0],[0]])
 mpc.x0 = x0
 simulator.x0 = x0
 estimator.x0 = x0
@@ -75,7 +73,8 @@ plt.ion()
 
 #fig2, ax2 = plt.subplot()
 plt.figure()
-x0log = np.zeros((6,1))
+x0log = np.zeros((4,1))
+
 """
 Run MPC main loop:
 """
@@ -85,7 +84,7 @@ for k in range(100):
     y_next = simulator.make_step(u0)
     x0 = estimator.make_step(y_next)
     x0log = np.hstack((x0log, x0))
-    
+
     if show_animation:
         graphics.plot_results(t_ind=k)
         graphics.plot_predictions(t_ind=k)
@@ -100,4 +99,4 @@ input('Press any key to exit.')
 
 # Store results:
 if store_results:
-    do_mpc.data.save_results([mpc, simulator], 'flaptter')
+    do_mpc.data.save_results([mpc, simulator], 'oscillating_masses')
